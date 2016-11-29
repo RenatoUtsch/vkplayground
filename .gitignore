@@ -1,0 +1,15 @@
+build
+*.o
+*.obj
+*.a
+*.ar
+*.lib
+*.so
+*.dll
+*.dylib
+*.exe
+*.spv
+*~
+*.tmp
+*.bkp
+*.swp

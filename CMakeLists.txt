@@ -65,13 +65,22 @@ add_subdirectory(${GLOBAL_SOURCE_DIR}/3rdparty/glfw)
 set(GLOBAL_LIBRARIES ${GLOBAL_LIBRARIES} glfw)
 
 # GLM
-set(GLOBAL_INCLUDE_DIRS ${GLOBAL_INCLUDE_DIRS} ${GLOBAL_SOURCE_DIR}/3rdparty/glm)
+set(GLOBAL_INCLUDE_DIRS ${GLOBAL_INCLUDE_DIRS} "${GLOBAL_SOURCE_DIR}/3rdparty/glm")
+
+# stb collection
+set(GLOBAL_INCLUDE_DIRS ${GLOBAL_INCLUDE_DIRS} "${GLOBAL_SOURCE_DIR}/3rdparty/stb")
+
+# tinyobjloader
+set(GLOBAL_INCLUDE_DIRS ${GLOBAL_INCLUDE_DIRS} "${GLOBAL_SOURCE_DIR}/3rdparty/tinyobjloader")
 
 # Debug flag
 if("${CMAKE_BUILD_TYPE}" MATCHES "(Debug|RelWithDebInfo)")
     set(GLOBAL_DEBUG ON)
     message(STATUS "Adding DEBUG macro")
     set(GLOBAL_DEFINITIONS "${GLOBAL_DEFINITIONS} -DDEBUG")
+
+    string(LENGTH "${GLOBAL_SOURCE_DIR}/" DEBUG_PROJECT_PATH_SIZE)
+    set(GLOBAL_DEFINITIONS "${GLOBAL_DEFINITIONS} -DDEBUG_PROJECT_PATH_SIZE=${DEBUG_PROJECT_PATH_SIZE}")
 endif()
 
 # Compiler Flags
@@ -148,3 +157,9 @@ include_directories(${GLOBAL_INCLUDE_DIRS})
 add_definitions(${GLOBAL_DEFINITIONS})
 add_executable(vkplayground ${GLOBAL_TARGET} ${GLOBAL_SOURCE_FILES})
 target_link_libraries(vkplayground ${GLOBAL_LIBRARIES})
+
+# Copy resource folder
+add_custom_command(TARGET vkplayground POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${GLOBAL_SOURCE_DIR}/resource ${GLOBAL_BINARY_DIR}/resource
+    COMMENT "Copying the resource folder")

@@ -1,6 +1,5 @@
 build
 *.o
-*.obj
 *.a
 *.ar
 *.lib
